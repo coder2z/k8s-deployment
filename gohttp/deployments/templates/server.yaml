@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-go-service
+  namespace: coder2z
+spec:
+  type: NodePort
+  selector:
+    name: my-demo-app-go
+    version: v1
+  ports:
+    - name: http
+      port: 1250
+      targetPort: 12500

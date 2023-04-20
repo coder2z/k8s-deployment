@@ -1,0 +1,31 @@
+FROM golang:1.20-alpine AS builder
+RUN mkdir /app
+WORKDIR /app
+ENV GOPROXY https://goproxy.cn
+ENV GO111MODULE on
+COPY . .
+RUN go mod download
+COPY . /app
+RUN CGO_ENABLED=0  go build -o gohttpApp
+
+FROM alpine:3.10
+
+ARG REPO_URL
+ARG BRANCH
+ARG COMMIT_REF
+LABEL repo-url=${REPO_URL}
+LABEL branch=${BRANCH}
+LABEL commit-ref=${COMMIT_REF}
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
+RUN apk update \
+  && apk upgrade \
+  && apk add --no-cache \
+  ca-certificates tzdata bash \
+  && update-ca-certificates 2>/dev/null || true \
+  && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+  && mkdir /app
+WORKDIR /app
+COPY --from=builder /app/gohttpApp /app/gohttpApp
+
+CMD ["/app/gohttpApp"]

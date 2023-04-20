@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-demo-app-go
+  namespace: coder2z
+spec:
+  selector:
+    matchLabels:
+      name: my-demo-app-go
+      version: v1
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        name: my-demo-app-go
+        version: v1
+    spec:
+      containers:
+        - name: go-demo
+          image: "{{.Values.images}}:{{.Values.version}}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 12500
