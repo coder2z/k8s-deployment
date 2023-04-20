@@ -8,7 +8,7 @@ spec:
     matchLabels:
       name: my-demo-app-go
       version: v1
-  replicas: 3
+  replicas: 10
   template:
     metadata:
       labels:
