@@ -12,3 +12,4 @@ spec:
     - name: http
       port: 1250
       targetPort: 12500
+      nodePort: 30804
